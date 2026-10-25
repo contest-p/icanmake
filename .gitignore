@@ -1,0 +1,38 @@
+# 의존성
+node_modules/
+
+# 빌드 결과·테스트 보고서
+.next/
+out/
+dist/
+coverage/
+playwright-report/
+test-results/
+
+# 환경변수·비밀 설정
+.env
+.env.*
+!.env.example
+
+# 로컬 배포 설정
+.vercel/
+
+# 캐시·증분 빌드 정보
+.cache/
+.turbo/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# 로그
+*.log
+
+# 편집기 임시 파일
+*.swp
+*.swo
+*~
+
+# 운영체제 임시 파일
+.DS_Store
+Thumbs.db
+Desktop.ini

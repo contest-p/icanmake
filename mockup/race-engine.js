@@ -30,7 +30,16 @@ class AnonymousRace {
     });
   }
   get winner() { return this.done ? this.#winner : null; }
+  validate(){
+    const finite=values=>values.every(Number.isFinite);
+    if(!finite([this.time,this.cameraY,this.leaderY,this.pulseCooldown])||this.time<0||this.cameraY<0||this.cameraY>RACE_TUNING.trackHeight-RACE_TUNING.viewportHeight+.01)throw new Error('Invalid race state');
+    if(!finite([this.paddle.x,this.paddle.y,this.paddle.px,this.paddle.py,this.paddle.targetX,this.paddle.targetY])||Math.abs(this.paddle.x)>10000||Math.abs(this.paddle.y)>10000)throw new Error('Invalid paddle state');
+    for(const b of this.balls){
+      if(!b||!finite([b.x,b.y,b.vx,b.vy,b.r,b.release,b.stuck])||b.r<=0||b.r>100||b.release<0||b.x< -600||b.x>1200||b.y< -650||b.y>RACE_TUNING.trackHeight+650||Math.abs(b.vx)>10000||Math.abs(b.vy)>10000||!this.#assignments.has(b.slot))throw new Error('Invalid ball state');
+    }
+  }
   snapshot() {
+    this.validate();
     const section=this.section();
     return {remaining:this.total-this.exited,total:this.total,exited:this.exited,done:this.done,time:this.time,flow:this.flow,interactions:this.interactions,
       cameraY:this.cameraY,trackHeight:RACE_TUNING.trackHeight,viewportHeight:RACE_TUNING.viewportHeight,finishY:RACE_TUNING.finishY,
@@ -38,7 +47,7 @@ class AnonymousRace {
       trailing:this.balls.filter(b=>!b.out&&b.release<=this.time&&b.y<this.cameraY).length,
       speed:Math.max(0,...this.balls.filter(b=>!b.out).map(b=>b.vy)),
       balls:this.balls.filter(b=>!b.out&&b.release<=this.time).map(b=>({slot:b.slot,x:b.x,y:b.y,r:b.r,vx:b.vx,vy:b.vy})),
-      paddle:{x:this.paddle.x,y:this.paddle.y,half:this.paddle.half},pins:this.pins,barriers:this.barriers(),sweepers:this.sweepers(),gate:this.gate(),pulse:this.pulseRing};
+      paddle:{x:this.paddle.x,y:this.paddle.y,half:this.paddle.half},pins:this.flow?[]:this.pins,barriers:this.barriers(),sweepers:this.sweepers(),gate:this.gate(),pulse:this.pulseRing};
   }
   barriers() {
     if(this.flow)return [];
@@ -109,11 +118,16 @@ class AnonymousRace {
     if(relative<0){b.vx-=1.6*relative*nx;b.vy-=1.6*relative*ny;}
   }
   step(elapsed) {
-    if(this.done||elapsed<=0)return;
+    if(this.done)return;
+    if(!Number.isFinite(elapsed)||elapsed<0)throw new Error('Invalid time step');
+    if(elapsed===0)return;
+    this.validate();
     const capped=Math.min(elapsed,.1),steps=Math.ceil(capped/(1/180)),dt=capped/steps;
     for(let s=0;s<steps&&!this.done;s++)this.integrate(dt);
   }
   integrate(dt) {
+    if(!Number.isFinite(dt)||dt<=0)throw new Error('Invalid integration step');
+    this.validate();
     this.time+=dt;
     this.pulseCooldown=Math.max(0,this.pulseCooldown-dt);
     if(this.pulseRing){this.pulseRing.life-=dt;if(this.pulseRing.life<=0)this.pulseRing=null;}
@@ -166,6 +180,7 @@ class AnonymousRace {
       if(relative<0){const impulse=-relative*.78;a.vx-=impulse*nx;a.vy-=impulse*ny;b.vx+=impulse*nx;b.vy+=impulse*ny;}
     }
     // Sort fractional crossing times, not array/project order. Exact ties use randomness.
+    this.validate();
     crossings.forEach(c=>c.tie=this.random());
     crossings.sort((a,b)=>a.fraction-b.fraction||a.tie-b.tie);
     for(const {ball} of crossings)this.exit(ball);

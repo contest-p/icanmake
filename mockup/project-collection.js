@@ -1,17 +1,37 @@
 'use strict';
+function validCalendarDate(value){
+  if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
+  const time=Date.parse(value+'T00:00:00Z');return Number.isFinite(time)&&new Date(time).toISOString().slice(0,10)===value;
+}
+function validRecordInstant(value){
+  return typeof value==='string'&&/^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,3})?(?:Z|[+-](?:0\d|1[0-4]):[0-5]\d)$/.test(value)&&validCalendarDate(value.slice(0,10))&&Number.isFinite(Date.parse(value));
+}
+function sanitizeHistory(raw,projects,quotes){
+  if(!Array.isArray(raw))return [];
+  const seen=new Set(),result=[],knownQuotes=new Set([...quotes.map(q=>q.id),'q17','q24','q25']);
+  for(const record of raw){
+    if(!record||typeof record!=='object'||Array.isArray(record)||record.sample===true||typeof record.roundId!=='string'||!record.roundId.trim()||record.roundId.length>200||typeof record.projectId!=='string'||typeof record.quoteId!=='string'||!knownQuotes.has(record.quoteId)||!validCalendarDate(record.quoteDate)||!validRecordInstant(record.date))continue;
+    const project=projects.find(p=>p.id===record.projectId),roundId=record.roundId.trim();
+    if(!project||seen.has(roundId))continue;
+    seen.add(roundId);result.push({roundId,projectId:project.id,quoteId:project.quoteId,quoteDate:record.quoteDate,date:record.date});
+  }
+  return result.sort((a,b)=>Date.parse(b.date)-Date.parse(a.date)).slice(0,10);
+}
 function projectProgress(projects,items){
   const completed=new Set(items.filter(p=>p.completedAt).map(p=>p.projectId));
   const levels=[...new Set(projects.map(p=>p.level))].sort((a,b)=>a-b).map(level=>{const group=projects.filter(p=>p.level===level);return {level,total:group.length,done:group.filter(p=>completed.has(p.id)).length};});
   const first=levels.findIndex(level=>level.done<level.total),stage=first<0?levels.length:first;
-  const pending=items.filter(entry=>!entry.completedAt&&projects.some(p=>p.id===entry.projectId));
+  const unfinished=items.filter(entry=>!entry.completedAt&&projects.some(p=>p.id===entry.projectId));
   const remaining=projects.filter(p=>p.level===stage&&!completed.has(p.id));
   const candidates=remaining.filter(p=>(p.prerequisites||[]).every(id=>completed.has(id)));
-  return {levels,stage,pending,remaining,complete:stage===levels.length,blocked:pending.length>0||stage===levels.length,candidates};
+  const pending=unfinished.filter(entry=>candidates.some(p=>p.id===entry.projectId));
+  const deferred=unfinished.filter(entry=>!pending.includes(entry));
+  return {levels,stage,pending,deferred,remaining,complete:stage===levels.length,blocked:pending.length>0||stage===levels.length,candidates};
 }
 // A project collection is independent of the ten most recent race results.
 function createProjectCollection(storage,projects,history=[]){
   const key=CURRICULUM.collectionKey,items=[],validId=id=>projects.some(p=>p.id===id);
-  const validDate=value=>typeof value==='string'&&!Number.isNaN(Date.parse(value));
+  const validDate=validRecordInstant;
   let warning=false,seeded=false;
   try{
     const current=storage.getItem(key),legacy=current===null?storage.getItem(CURRICULUM.legacyCollectionKey):null;

@@ -1,0 +1,119 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const files=['projects.js','quotes.js','race-engine.js','track-view.js','project-collection.js','app.js'];
+function boot(initial=[],hash=''){
+  const values=new Map(initial),nodes=new Map(),events=new Map();
+  const node=selector=>{if(!nodes.has(selector))nodes.set(selector,{innerHTML:'',textContent:'',dataset:{},style:{},classList:{add(){},remove(){},toggle(){}},querySelector:node,querySelectorAll:()=>[],addEventListener(){},setAttribute(){},removeAttribute(){},focus(){},contains:()=>true});return nodes.get(selector);};
+  const context=vm.createContext({document:{querySelector:node,querySelectorAll:()=>[],hidden:false,activeElement:node('active'),addEventListener:(name,fn)=>events.set(name,fn)},location:{hash},window:{addEventListener(){},scrollTo(){}},localStorage:{getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value)},performance:{now:()=>1000},crypto:{randomUUID:()=>String(Math.random())},requestAnimationFrame:()=>1,cancelAnimationFrame(){},setTimeout:()=>1,clearTimeout(){},console,Date,Intl,Math,Set});
+  const run=source=>vm.runInContext(source,context);
+  for(const file of files)run(fs.readFileSync(new URL(file,import.meta.url),'utf8'));
+  const click=(selector,dataset)=>events.get('click')({preventDefault(){},target:{closest:key=>key===selector?{dataset}:null}});
+  return {run,node,events,values,click,html:()=>node('#main').innerHTML};
+}
+const historyKey='project-pinball:curriculum4:history:v1';
+const valid={roundId:'saved-round',projectId:'p01',quoteId:'q01',quoteDate:'2020-01-02',date:'2020-01-02T12:34:56.000Z'};
+const badVariants=[{quoteDate:7},{quoteDate:{}},{quoteDate:null},{quoteDate:'2020-02-30'},{quoteDate:'2020-13-01'},{quoteDate:'2020-1-2'},{roundId:null},{roundId:'  '},{roundId:23},{projectId:[]},{projectId:'p999'},{quoteId:12},{quoteId:'q99'},{date:123},{date:'2020-02-30T12:34:56Z'},{date:'2020-01-02T27:34:56Z'}];
+const raw=[valid,{...valid},...badVariants.map((change,i)=>({...valid,roundId:'bad-'+i,...change})),null,[],{},'bad'];
+const saved=boot([[historyKey,JSON.stringify(raw)]],'#result');
+assert.equal(saved.run('state.history.length'),1,'invalid records and duplicate round IDs rejected');
+assert.equal(saved.run('state.quoteDate'),'2020-01-02');
+assert.ok(saved.html().includes('2020.01.02'));
+for(const screen of ['quote','collection','history','admin-projects','home']){
+  saved.run(`navigate('${screen}');navigate('result')`);
+  assert.equal(saved.run('state.quoteDate'),'2020-01-02','viewed result date survives screen roundtrips');
+  assert.ok(saved.html().includes('2020.01.02'));
+  assert.equal(saved.run('state.screen'),'result');
+}
+assert.equal(saved.values.get(historyKey),JSON.stringify(raw),'read validation does not overwrite original history');
+const sanitize=saved.run('sanitizeHistory'),projects=saved.run('PROJECTS'),quotes=saved.run('quotes');
+const many=Array.from({length:14},(_,i)=>({...valid,roundId:'round-'+i,date:`2020-01-${String(i+1).padStart(2,'0')}T12:00:00Z`}));
+assert.equal(sanitize(many,projects,quotes).length,10);
+assert.equal(sanitize(many,projects,quotes)[0].roundId,'round-13','newest records first');
+assert.equal(sanitize([{...valid,quoteId:'q24'}],projects,quotes)[0].quoteId,'q01','known retired quote ID is normalized');
+
+const sample=boot([],'#result');
+assert.ok(sample.html().includes('결과 화면 미리보기'));
+assert.ok(sample.html().includes('실제 레이스 결과가 아니며'));
+assert.equal(sample.run('state.history.length'),0);assert.equal(sample.run('collection.items.length'),0);
+sample.run("navigate('history')");sample.click('[data-history]',{history:'1'});
+assert.ok(sample.html().includes('샘플 기록의 예시'));
+sample.run("navigate('quote');navigate('result')");assert.ok(sample.html().includes('샘플 기록의 예시'));
+assert.equal(sample.run('collection.items.length'),0,'sample views do not collect projects');
+
+const legacyEntry={projectId:'p24',firstDrawnAt:'2020-01-02T12:34:56Z',lastDrawnAt:'2020-01-02T12:34:56Z',drawCount:1,completedAt:null};
+const archive=JSON.stringify([legacyEntry]),deferred=boot([['project-pinball:collection:v1',archive]]);
+assert.equal(deferred.run('progress().stage'),0);
+assert.equal(deferred.run('progress().pending.length'),0);
+assert.equal(deferred.run('progress().deferred.length'),1);
+assert.equal(deferred.run('canPlay()'),true,'future imported project does not block starter stage');
+deferred.run("navigate('collection')");assert.ok(deferred.html().includes('선행 학습 대기'));
+deferred.events.get('change')({target:{dataset:{complete:'p24'}}});
+assert.equal(deferred.run("collection.get('p24').completedAt"),null,'future completion cannot skip prerequisites');
+deferred.run("for(const p of PROJECTS.filter(p=>p.level<2||['p18','p17','p25','p26','p27'].includes(p.id))){collection.draw(p.id,'2020-01-02T12:34:56Z');collection.toggle(p.id,'2020-01-03T12:34:56Z');}");
+assert.equal(deferred.run('progress().stage'),2);
+assert.equal(deferred.run('progress().pending[0].projectId'),'p24');
+assert.equal(deferred.run('canPlay()'),false,'imported mission blocks when stage and prerequisites open');
+deferred.events.get('change')({target:{dataset:{complete:'p24'}}});
+assert.equal(deferred.run('progress().stage'),3);assert.equal(deferred.run('canPlay()'),true);
+assert.equal(deferred.values.get('project-pinball:collection:v1'),archive,'legacy archive preserved');
+
+const nav=boot();nav.run('startGame();state.race.step(.1)');
+const round=nav.run('state.round.id'),position=nav.run('JSON.stringify(state.race.snapshot())'),time=nav.run('state.race.time');
+for(const screen of ['quote','history','collection','admin-projects','home']){
+  nav.run(`navigate('${screen}');loop(1300)`);
+  assert.equal(nav.run('state.round.id'),round,'menu preserves the round');
+  assert.equal(nav.run('state.race.time'),time,'menu freezes physics');
+  nav.run("navigate('playing')");
+  assert.equal(nav.run('state.screen'),'paused','return requires manual resume');
+  assert.equal(nav.run('JSON.stringify(state.race.snapshot())'),position,'balls and camera preserved');
+}
+nav.run('resume();loop(1100)');assert.ok(nav.run('state.race.time')>time,'manual resume advances same race');
+nav.run("navigate('home')");assert.ok(nav.html().includes('기존 판 취소'));
+assert.equal(nav.run('state.round.id'),round);
+nav.run('autoFlow()');assert.equal(nav.run('state.round.id'),round,'auto flow continues held round');
+assert.equal(nav.run('state.race.flow'),true);
+nav.run("navigate('home');startGame()");assert.notEqual(nav.run('state.round.id'),round,'explicit new race cancels unpublished round');
+assert.equal(nav.run('state.history.length'),0,'cancelled round has no result');
+
+const faults=boot();
+for(const mutation of ['state.race.balls[0].x=NaN','state.race.balls[0].y=Infinity','state.race.balls[0].x=1e200','state.race.balls[0].vy="bad"','state.race.balls[0].r=-1','state.race.cameraY=Infinity','state.race.step=()=>{throw Error("engine exception")}']){
+  assert.equal(faults.run('startGame(true)'),true);
+  faults.run(mutation+';loop(1100)');
+  assert.equal(faults.run('state.screen'),'engine-error','invalid state/exception reaches error screen');
+  assert.equal(faults.run('state.race'),null);assert.equal(faults.run('state.round'),null);
+  assert.equal(faults.run('state.history.length'),0);assert.equal(faults.run('collection.items.length'),0);
+  assert.ok(faults.html().includes('레이스 다시 시작'));
+}
+assert.equal(faults.run('startGame()'),true,'error can restart normally');
+faults.run('updateRaceVisual()');assert.ok(faults.node('#race-pins').innerHTML.length>0);
+faults.run('state.race.releaseObstacles();updateRaceVisual()');assert.equal(faults.node('#race-pins').innerHTML,'','live pin rendering follows collisions');
+faults.run('render()');assert.ok(faults.html().includes('id="race-pins"></g>'));
+assert.ok(faults.html().includes('id="race-paddle" opacity="0"'));
+assert.equal(faults.run('state.race.snapshot().pins.length'),0);
+assert.equal(faults.run('state.race.snapshot().barriers.length'),0);
+faults.run('var originalSnapshot=AnonymousRace.prototype.snapshot;AnonymousRace.prototype.snapshot=()=>{throw Error("snapshot exception")};startGame()');
+assert.equal(faults.run('state.screen'),'engine-error','error screen works even when snapshot renderer fails');
+faults.run('AnonymousRace.prototype.snapshot=originalSnapshot');
+assert.equal(faults.run('startGame()'),true);
+
+// Opening old results during a paused new race must not change that race's date.
+const dateIsolation=boot([[historyKey,JSON.stringify([{...valid,projectId:'p01'}])]]);
+dateIsolation.run("collection.toggle('p01');startGame()");
+const startedOn=dateIsolation.run('state.round.quoteDate');
+dateIsolation.run("navigate('history')");dateIsolation.click('[data-history]',{history:'0'});
+assert.equal(dateIsolation.run('state.quoteDate'),'2020-01-02');
+dateIsolation.run("navigate('playing');resume();state.race.exit(state.race.balls[0]);finish()");
+assert.equal(dateIsolation.run('state.history[0].quoteDate'),startedOn,'race date is independent of viewed old result');
+const undoDuringPause=boot([[historyKey,JSON.stringify([valid])]]);
+undoDuringPause.run("collection.toggle('p01');startGame();navigate('collection')");
+const heldId=undoDuringPause.run('state.round.id');
+undoDuringPause.events.get('change')({target:{dataset:{complete:'p01'}}});
+undoDuringPause.run("navigate('playing')");
+assert.equal(undoDuringPause.run('canPlay()'),false);
+assert.equal(undoDuringPause.run('state.round.id'),heldId,'temporary progress lock keeps the paused unpublished round');
+undoDuringPause.events.get('change')({target:{dataset:{complete:'p01'}}});
+undoDuringPause.run("navigate('playing')");
+assert.equal(undoDuringPause.run('state.round.id'),heldId);assert.equal(undoDuringPause.run('state.screen'),'paused');
+console.log('PASS: malformed/duplicate history, strict calendar and instant dates, old result roundtrips, sample labels, deferred legacy missions, menu pause/return/new-round rules, invalid physics/exceptions without invented winners, pin/paddle rendering and round/view date isolation.');
+console.log('LIMIT: VM/DOM-stub regression tests; real browser visuals and input feel remain unverified.');

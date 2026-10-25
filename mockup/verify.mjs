@@ -105,6 +105,7 @@ events.get('click')({target:{closest:selector=>selector==='[data-history]'?{data
 assert.equal(run('quotes[state.quote].id'),previousRecord.quoteId,'history restores its original person');
 assert.equal(run('state.project.id'),previousRecord.projectId,'history restores its original mission');
 assert.equal(run('state.quoteDate'),previousRecord.quoteDate,'history restores original date');
+events.get('click')({target:{closest:selector=>selector==='[data-project]'?{dataset:{project:'p01'}}:null}});
 const collectedId=run('state.project.id');
 events.get('change')({target:{dataset:{complete:collectedId}}});
 assert.ok(run('collection.get(state.project.id).completedAt'),'result completion checkbox works');
@@ -131,7 +132,7 @@ assert.equal(vm.runInContext('collection.items.length',reloadContext),24,'reload
 run("navigate('admin-quotes')");
 assert.equal((getNode('#main').innerHTML.match(/class="character-card"/g)||[]).length,24);
 run("navigate('admin-projects')");events.get('input')({target:{id:'project-search',value:'CSV'}});assert.equal((getNode('#projects-body').innerHTML.match(/<tr>/g)||[]).length,1);
-run("navigate('no-candidates')");assert.ok(getNode('#main').innerHTML.includes('미완료 프로젝트'),'diagnostic route cannot bypass progression lock');
+run("navigate('no-candidates')");assert.ok(getNode('#main').innerHTML.includes('미완료 미션'),'diagnostic route cannot bypass progression lock');
 run('function seeded(seed){return ()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}}');
 run('var a=new AnonymousRace(PROJECTS.slice(0,8),seeded(11));var b=new AnonymousRace(PROJECTS.slice(0,8),seeded(11));a.balls.forEach(x=>a.exit(x));[...b.balls].reverse().forEach(x=>b.exit(x))');
 assert.notEqual(run('a.winner.id'),run('b.winner.id'),'exit order changes mission');
@@ -202,7 +203,7 @@ for(let n=0;n<24;n++){
  completedJourney.add(wonId);
  assert.equal(run('state.project.level'),expectedLevel);
  assert.equal(run('canPlay()'),false,'new mission immediately locks next race');
- assert.ok(getNode('#main').innerHTML.includes('미완료 프로젝트를 모두 완료하면 열려요.'));
+ assert.ok(getNode('#main').innerHTML.includes('현재 단계의 진행 가능한 미완료 미션을 완료하면 열려요.'));
  assert.equal(run('createRound()'),false,'round creation guard');
  assert.equal(run('startGame(true)'),false,'automatic race guard');
  for(const route of ['playing','paused','finish-line']){
@@ -230,7 +231,8 @@ for(const file of ['projects.js','quotes.js','race-engine.js','track-view.js','p
 assert.equal(vm.runInContext('state.screen',lockedReload),'home','reload on playing URL cannot bypass lock');
 assert.equal(vm.runInContext('canPlay()',lockedReload),false,'lock survives reload');
 const progressFn=run('projectProgress');
-assert.equal(progressFn(run('PROJECTS'),[{projectId:'p25',completedAt:null},{projectId:'p03',completedAt:null}]).pending.length,2,'all legacy unfinished projects block the journey');
+assert.equal(progressFn(run('PROJECTS'),[{projectId:'p25',completedAt:null},{projectId:'p03',completedAt:null}]).pending.length,1,'only eligible legacy unfinished projects block the journey');
+assert.equal(progressFn(run('PROJECTS'),[{projectId:'p25',completedAt:null},{projectId:'p03',completedAt:null}]).deferred.length,1,'future legacy projects are deferred');
 run('var singleBallRace=new AnonymousRace(PROJECTS.slice(0,1),seeded(7));var singleSteps=0;while(!singleBallRace.done&&singleSteps++<6000)singleBallRace.step(1/60)');
 assert.equal(run('singleBallRace.done'),true,'final single ball can physically finish the full course');
 assert.equal(run('singleBallRace.winner.id'),'p01');
@@ -238,4 +240,4 @@ const html=fs.readFileSync(path.join(root,'index.html'),'utf8');for(const[,asset
 console.log(`PASS: 24 distinct quotes and portraits, fixed one-to-one project pairing, all three UFC fighters assigned, winner-matched quote/portrait, stable detail/history/reload, legacy random record normalization, 17 screens, vertical world, chase camera bounds, camera-relative paddle, hidden identities, FIRST actual finish, immediate stop, fractional exit order, pulse, history, assets. 30 simulated races; controlled vs passive winners differ in ${changedWinners}/15 matched seeds. Slowest controlled race ${maxDuration.toFixed(1)}s.`);
 console.log(`Median controlled race: ${durations.sort((a,b)=>a-b)[7].toFixed(1)}s. Median passive race: ${passiveDurations.sort((a,b)=>a-b)[7].toFixed(1)}s.`);
 console.log('LIMIT: Browser layout and real pointer/keyboard input have not been verified.');
-console.log('PASS: sequential 8+7+6+3 progression, dependency-filtered candidates and ordered final service missions, 24 unique missions, global unfinished lock, manual completion, all entry-point guards, reload, undo, final all-complete screen.');
+console.log('PASS: sequential 8+7+6+3 progression, dependency-filtered candidates and ordered final service missions, 24 unique missions, eligible-stage unfinished lock, manual completion, all entry-point guards, reload, undo, final all-complete screen.');
