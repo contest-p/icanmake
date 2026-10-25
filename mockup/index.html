@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111512">
+  <title>프로젝트 핀볼 — 화면 목업</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="race.css">
+</head>
+<body>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-quote" viewBox="0 0 24 24"><path d="M10 7H5v6h5v5H4v-7l3-4M21 7h-5v6h5v5h-6v-7l3-4"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 16h6M16 9h6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2Z M12 9v5M12 17v1"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5v15M3 4l9 2 9-2v14l-9 2-9-2Z"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 1 8M4 4v6h6"/></symbol>
+  </defs></svg>
+  <aside class="sidebar">
+    <a class="studio-brand" href="#home"><span class="brand-symbol">p<span>•</span></span><span>PINBALL<span class="brand-sub">PROJECT STUDIO</span></span></a>
+    <div class="sidebar-caption"><span class="live-dot"></span> INTERACTIVE MOCKUP <span>v1.0</span></div>
+    <nav id="navigation" aria-label="화면 미리보기"></nav>
+    <div class="sidebar-bottom"><span class="avatar">ME</span><div>나만의 작은 아케이드<small>개인 학습 공간 · PC 전용</small></div><span class="tiny-dot"></span></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><div class="breadcrumb">프로젝트 핀볼 <span>/</span> <strong id="page-title">시작 화면</strong></div><div class="topbar-end"><span class="preview-label">DESIGN PREVIEW</span><button class="icon-button" id="reset-demo" aria-label="목업 초기 화면으로 이동" title="목업 초기 화면으로 이동"><svg><use href="#i-reset"/></svg></button></div></header>
+    <main id="main" tabindex="-1"></main>
+    <footer class="workspace-footer"><span>작은 시작이 쌓여, 나만의 실력이 된다.</span><span>PROJECT PINBALL <span class="footer-cross">✳</span> LEARN BY MAKING</span></footer>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="projects.js"></script>
+  <script src="quotes.js"></script>
+  <script src="race-engine.js"></script>
+  <script src="track-view.js"></script>
+  <script src="project-collection.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

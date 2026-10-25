@@ -1,0 +1,106 @@
+{
+    "tool":  "built-in ImageGen",
+    "type":  "AI-generated non-photographic portrait illustrations",
+    "portraits":  [
+                      {
+                          "key":  "sasuke",
+                          "file":  "sasuke.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Sasuke Uchiha from Naruto, dark spiky hair, high collar, composed and focused expression, violet accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "kakashi",
+                          "file":  "kakashi.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Kakashi Hatake from Naruto, silver hair, mask covering lower face, forehead protector over one eye, sage green accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "rocklee",
+                          "file":  "rocklee.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Rock Lee from Naruto, black bowl cut, thick eyebrows, green training jumpsuit, warm determined gaze, bright green accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "guy",
+                          "file":  "guy.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Might Guy from Naruto, bowl cut black hair, thick eyebrows, green jumpsuit with flak jacket, exuberant confident grin, emerald accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "zoro",
+                          "file":  "zoro.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Roronoa Zoro from One Piece, short green hair, scar over left eye, green robe, three swords visible at waist, lime green accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "sanji",
+                          "file":  "sanji.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Sanji from One Piece, blond hair covering one eye, curled eyebrow, dark suit, composed confident expression, warm amber accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "law",
+                          "file":  "law.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Trafalgar Law from One Piece, spotted white fur hat, short dark goatee, dark coat, calm analytical gaze, icy teal accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "shanks",
+                          "file":  "shanks.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Shanks from One Piece, red hair, three scars over left eye, white open collar shirt and black cape, calm confident smile, crimson accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "genos",
+                          "file":  "genos.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Genos from One Punch Man, blond hair, dark sclera and golden eyes, mechanical metal shoulders and arms, amber energy accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "mumen",
+                          "file":  "mumen.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Mumen Rider from One Punch Man, green bicycle helmet and protective goggles, earnest courageous expression, forest green accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "erwin",
+                          "file":  "erwin.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Erwin Smith from Attack on Titan, neatly parted blond hair, strong eyebrows, green scout cloak, resolute commander expression, ochre accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "armin",
+                          "file":  "armin.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Armin Arlert from Attack on Titan, blond bob hair, blue eyes, green scout cloak, thoughtful hopeful expression, blue accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "rengoku",
+                          "file":  "rengoku.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Kyojuro Rengoku from Demon Slayer, flame-shaped blond hair with red tips, thick dark eyebrows, white flame-edged haori, confident encouraging smile, fiery orange accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "giyu",
+                          "file":  "giyu.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Giyu Tomioka from Demon Slayer, dark unruly hair, mismatched patterned haori over uniform, calm serious blue eyes, deep blue accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "gojo",
+                          "file":  "gojo.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Satoru Gojo from Jujutsu Kaisen, white hair, black blindfold and high collar uniform, confident playful smile, electric blue accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "nanami",
+                          "file":  "nanami.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Kento Nanami from Jujutsu Kaisen, neat side-part blond hair, tinted glasses, beige business suit and patterned tie, composed professional expression, gold accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "yuji",
+                          "file":  "yuji.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Yuji Itadori from Jujutsu Kaisen, short pink hair, red hood and dark school uniform, warm determined expression, coral accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "jung",
+                          "file":  "jung.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Jung Chan-sung, The Korean Zombie, South Korean male MMA athlete, realistic recognizable facial likeness interpreted as refined manga illustration, short black hair, clean-shaven, athletic build, black training shirt, determined composed expression, red accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "poirier",
+                          "file":  "poirier.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Dustin Poirier, American male MMA athlete, realistic recognizable facial likeness interpreted as refined manga illustration, short brown hair, light stubble, athletic build, black training shirt, focused confident expression, diamond blue accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      },
+                      {
+                          "key":  "holloway",
+                          "file":  "holloway.png",
+                          "prompt":  "One premium portrait illustration for a personal learning arcade website. Max Holloway, Hawaiian American male MMA athlete, realistic recognizable facial likeness interpreted as refined manga illustration, short dark hair and moustache, athletic build, black training shirt, confident friendly expression, warm red accents. Waist-up single male subject, charcoal green-black background with subtle halftone and sparse ink streaks, cel shaded manga ink artwork, head fully visible with breathing room, expressive face in the upper center, character occupies right two thirds so text can overlay left, coherent elegant editorial style, cream highlights and limited accent colors. No typography, no logos, no watermarks. Non-photographic illustration."
+                      }
+                  ]
+}
