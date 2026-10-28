@@ -17,6 +17,20 @@ function sanitizeHistory(raw,projects,quotes){
   }
   return result.sort((a,b)=>Date.parse(b.date)-Date.parse(a.date)).slice(0,10);
 }
+function makeProgressBackup(history,items){
+  return {format:'project-pinball-progress',version:1,exportedAt:new Date().toISOString(),history,collection:items};
+}
+function parseProgressBackup(raw,projects,quotes){
+  if(!raw||raw.format!=='project-pinball-progress'||raw.version!==1||!Array.isArray(raw.history)||!Array.isArray(raw.collection)||raw.history.length>10||raw.collection.length>projects.length)throw new Error('지원하지 않는 백업 형식');
+  const history=sanitizeHistory(raw.history,projects,quotes);
+  if(history.length!==raw.history.length)throw new Error('기록 항목이 올바르지 않습니다');
+  const seen=new Set(),collection=[];
+  for(const entry of raw.collection){
+    if(!entry||!projects.some(p=>p.id===entry.projectId)||seen.has(entry.projectId)||!validRecordInstant(entry.firstDrawnAt)||!validRecordInstant(entry.lastDrawnAt)||Date.parse(entry.firstDrawnAt)>Date.parse(entry.lastDrawnAt)||!Number.isSafeInteger(entry.drawCount)||entry.drawCount<1||(entry.completedAt!==null&&!validRecordInstant(entry.completedAt)))throw new Error('진행 항목이 올바르지 않습니다');
+    seen.add(entry.projectId);collection.push({projectId:entry.projectId,firstDrawnAt:entry.firstDrawnAt,lastDrawnAt:entry.lastDrawnAt,drawCount:entry.drawCount,completedAt:entry.completedAt});
+  }
+  return {history,collection};
+}
 function projectProgress(projects,items){
   const completed=new Set(items.filter(p=>p.completedAt).map(p=>p.projectId));
   const levels=[...new Set(projects.map(p=>p.level))].sort((a,b)=>a-b).map(level=>{const group=projects.filter(p=>p.level===level);return {level,total:group.length,done:group.filter(p=>completed.has(p.id)).length};});

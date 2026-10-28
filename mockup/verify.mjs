@@ -11,7 +11,7 @@ class Element{
  querySelector(s){return getNode(s);}querySelectorAll(){return [];}addEventListener(){}setAttribute(){}removeAttribute(){}focus(){}contains(){return true;}
 }
 function getNode(s){if(!nodes.has(s))nodes.set(s,new Element());return nodes.get(s);}
-const context=vm.createContext({document:{querySelector:getNode,querySelectorAll:()=>[],hidden:false,activeElement:new Element(),addEventListener:(t,f)=>events.set(t,f)},location:{hash:''},window:{addEventListener(){},scrollTo(){}},localStorage:{getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v)},performance:{now:()=>1000},crypto:{randomUUID:()=>String(Math.random())},requestAnimationFrame:()=>1,cancelAnimationFrame(){},setTimeout:()=>1,clearTimeout(){},console,Date,Intl,Math,Set});
+const context=vm.createContext({document:{querySelector:getNode,querySelectorAll:()=>[],hidden:false,activeElement:new Element(),addEventListener:(t,f)=>events.set(t,f)},location:{hash:''},window:{addEventListener(){},scrollTo(){}},localStorage:{getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v),removeItem:k=>values.delete(k)},performance:{now:()=>1000},crypto:{randomUUID:()=>String(Math.random())},requestAnimationFrame:()=>1,cancelAnimationFrame(){},setTimeout:()=>1,clearTimeout(){},console,Date,Intl,Math,Set});
 const run=code=>vm.runInContext(code,context);
 for(const file of ['projects.js','quotes.js','race-engine.js','track-view.js','project-collection.js','app.js'])run(fs.readFileSync(path.join(root,file),'utf8'));
 assert.equal(run('PROJECTS.length'),24);
